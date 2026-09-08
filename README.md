@@ -63,6 +63,5 @@ UI → ViewModel → Repository → Firebase/Room
 3. Build and run in Android Studio
 
 ## Developer
-Jay Singh — Android Developer | MBA IT | B.Tech CSE (AKTU)
+Jay Singh — Android Developer | MBA IT | B.Tech CSE (AKTU)   
 LinkedIn: (https://www.linkedin.com/in/jaysinghpatel0/)
-```
