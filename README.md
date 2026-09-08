@@ -64,4 +64,4 @@ UI → ViewModel → Repository → Firebase/Room
 
 ## Developer
 Jay Singh — Android Developer | MBA IT | B.Tech CSE (AKTU)   
-LinkedIn: (https://www.linkedin.com/in/jaysinghpatel0/)
+LinkedIn: https://www.linkedin.com/in/jaysinghpatel0/
