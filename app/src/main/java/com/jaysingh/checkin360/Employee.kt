@@ -1,4 +1,4 @@
-package com.example.checkin360
+package com.jaysingh.checkin360
 
 data class Employee(val id: Int, val name: String, val department: String, val designation: String)
 

@@ -1,4 +1,4 @@
-package com.example.checkin360
+package com.jaysingh.checkin360
 
 import org.junit.Test
 

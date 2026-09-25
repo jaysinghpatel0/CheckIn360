@@ -1,4 +1,4 @@
-package com.example.checkin360
+package com.jaysingh.checkin360
 
 import androidx.test.platform.app.InstrumentationRegistry
 import androidx.test.ext.junit.runners.AndroidJUnit4
