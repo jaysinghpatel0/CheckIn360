@@ -1,4 +1,4 @@
-package com.example.checkin360.ui.theme
+package com.jaysingh.checkin360.ui.theme
 
 import androidx.compose.material3.Typography
 import androidx.compose.ui.text.TextStyle

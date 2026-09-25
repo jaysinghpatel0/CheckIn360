@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "104881907838",
+    "project_id": "checkin360-46fa1",
+    "storage_bucket": "checkin360-46fa1.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:104881907838:android:bd41d7f479daa4d2b4102f",
+        "android_client_info": {
+          "package_name": "com.jaysingh.checkin360"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCLlOlF4g9JdDB81J1fx_5txVwBl4WAS9E"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
