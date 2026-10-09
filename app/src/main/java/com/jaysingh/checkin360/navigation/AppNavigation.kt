@@ -4,7 +4,10 @@ import androidx.compose.runtime.Composable
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.google.firebase.Firebase
+import com.google.firebase.auth.auth
 import com.jaysingh.checkin360.ui.auth.LoginScreen
+import com.jaysingh.checkin360.ui.home.HomeScreen
 
 
 // Routes
@@ -31,8 +34,14 @@ fun AppNavigation() {
             )
         }
         composable(Routes.HOME) {
-            // HomeScreen — We will do this in CHKIN-3
-            // Just a placeholder for now
+            HomeScreen(
+                onLogout = {
+                    Firebase.auth.signOut()
+                    navController.navigate(Routes.LOGIN) {
+                        popUpTo(Routes.HOME) { inclusive = true }
+                    }
+                }
+            )
         }
     }
 }
