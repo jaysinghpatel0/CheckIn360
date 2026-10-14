@@ -22,9 +22,9 @@ class LoginViewModel : ViewModel() {
 
     private val auth = Firebase.auth
 
-    init {
-        auth.signOut()
-    }
+//    init {
+//        auth.signOut()            //when app is open required to login, if app is already open then signout
+//    }
 
     private val _uiState = MutableStateFlow<LoginUiState>(LoginUiState.Idle)
     val uiState: StateFlow<LoginUiState> = _uiState

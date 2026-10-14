@@ -29,6 +29,7 @@ import java.util.*
 @Composable
 fun HomeScreen (
     onLogout: () -> Unit,
+    onHistoryClick: () -> Unit,
     viewModel: HomeViewModel = viewModel()
 ) {
     val context = LocalContext.current
@@ -47,245 +48,294 @@ fun HomeScreen (
         if (granted) viewModel.handlePunch(context)
     }
 
-    LazyColumn(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(Color(0xFFF8F9FA))
-    ) {
-        // ------Header------
-        item {
-            Box(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .background(PrimaryBlue)
-                    .statusBarsPadding()
-                    .padding(16.dp)
-            ) {
-                Column {
-                    Row(
-                        modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.SpaceBetween,
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        Column {
-                            val hour = Calendar.getInstance()
-                                .get(Calendar.HOUR_OF_DAY)
-                            val greeting = when {
-                                hour < 12 -> "Good morning"
-                                hour < 17 -> "Good afternoon"
-                                else -> "Good evening"
-                            }
-                            Text(
-                                "$greeting, ",
-                                color = Color.White.copy(alpha = 0.85f),
-                                fontSize = 14.sp
-                            )
-                            Text(
-                                userName,
-                                color = Color.White,
-                                fontSize = 24.sp,
-                                fontWeight = FontWeight.Bold
-                            )
-                        }
-                        // Profile + Logout
-                        Row(
-                            verticalAlignment = Alignment.CenterVertically,
-                            horizontalArrangement = Arrangement.spacedBy(8.dp)
-                        ) {
-                            Box(
-                                modifier = Modifier
-                                    .size(38.dp)
-                                    .background(
-                                        Color.White.copy(alpha = 0.2f),
-                                        CircleShape
-                                    ),
-                                contentAlignment = Alignment.Center
-                            ) {
-                                Text(
-                                    userName.firstOrNull()
-                                        ?.uppercaseChar()
-                                        ?.toString() ?: "J",
-                                    color = Color.White,
-                                    fontWeight = FontWeight.Bold
-                                )
-                            }
-                            IconButton(onClick = onLogout) {
-                                Icon(
-                                    Icons.Default.Logout,
-                                    contentDescription = "Logout",
-                                    tint = Color.White
-                                )
-                            }
-                        }
-                    }
-                    Spacer(Modifier.height(4.dp))
-                    val dateStr = SimpleDateFormat(
-                        "EEE, dd MMM yyyy", Locale.getDefault()
-                    ).format(Date())
-                    Text(
-                        dateStr,
-                        color = Color.White.copy(alpha = 0.75f),
-                        fontSize = 12.sp
-                    )
-                }
-            }
-        }
+    // navigate to history
 
-        // ── Punch Card ──
-        item {
-            Card(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(16.dp),
-                shape = RoundedCornerShape(16.dp),
-                elevation = CardDefaults.cardElevation(2.dp),
-                colors = CardDefaults.cardColors(
-                    containerColor = Color.White
+    Scaffold(
+        bottomBar = {
+            NavigationBar(containerColor = Color.White) {
+                NavigationBarItem(
+                    icon = {
+                        Icon(Icons.Default.Home, "Home")
+                    },
+                    label = { Text("Home") },
+                    selected = true,
+                    onClick = {}
                 )
-            ) {
-                Column(modifier = Modifier.padding(16.dp)) {
-                    when (val state = punchState) {
-                        is PunchState.Loading -> {
-                            Box(
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .height(80.dp),
-                                contentAlignment = Alignment.Center
-                            ) {
-                                CircularProgressIndicator(color = PrimaryBlue)
-                            }
-                        }
-                        is PunchState.NotPunchedIn -> {
-                            StatusBadge("Not Checked In", Color(0xFFEF4444))
-                            Spacer(Modifier.height(12.dp))
-                            PunchTimesRow("--:--", "--:--")
-                            Spacer(Modifier.height(16.dp))
-                            PunchButton(
-                                text = "Punch In",
-                                isPunchIn = true,
-                                onClick = {
-                                    permissionLauncher.launch(
-                                        arrayOf(
-                                            Manifest.permission.ACCESS_FINE_LOCATION,
-                                            Manifest.permission.ACCESS_COARSE_LOCATION
-                                        )
-                                    )
-                                }
-                            )
-                        }
-
-                        is PunchState.PunchedIn -> {
-                            StatusBadge("Working", Color(0xFF10B981))
-                            Spacer(Modifier.height(12.dp))
-                            PunchTimesRow(state.time, "--:--")
-                            Spacer(Modifier.height(16.dp))
-                            PunchButton(
-                                text = "Punch Out",
-                                isPunchIn = false,
-                                onClick = {
-                                    permissionLauncher.launch(
-                                        arrayOf(
-                                            Manifest.permission.ACCESS_FINE_LOCATION,
-                                            Manifest.permission.ACCESS_COARSE_LOCATION
-                                        )
-                                    )
-                                }
-                            )
-                        }
-
-                        is PunchState.PunchedOut -> {
-                            StatusBadge("Day Complete ✓", Color(0xFF2563EB))
-                            Spacer(Modifier.height(12.dp))
-                            PunchTimesRow(state.inTime, state.outTime)
-                            Spacer(Modifier.height(16.dp))
-                            Button(
-                                onClick = {},
-                                enabled = false,
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .height(50.dp),
-                                colors = ButtonDefaults.buttonColors(
-                                    disabledContainerColor = Color(0xFFE5E7EB)
-                                ),
-                                shape = RoundedCornerShape(10.dp)
-                            ) {
-                                Text(
-                                    "Work Day Complete",
-                                    color = Color(0xFF6B7280)
-                                )
-                            }
-                        }
-
-                        is PunchState.Error -> {
-                            Text(
-                                state.msg,
-                                color = Color(0xFFEF4444),
-                                fontSize = 13.sp
-                            )
-                            Spacer(Modifier.height(8.dp))
-                            TextButton(
-                                onClick = { viewModel.loadData() }
-                            ) {
-                                Text("Retry", color = PrimaryBlue)
-                            }
-                        }
-                    }
-                }
-            }
-        }
-
-        // ── Stats Row ──
-        item {
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 16.dp),
-                horizontalArrangement = Arrangement.spacedBy(10.dp)
-            ) {
-                StatCard("Present", stats.first.toString(),
-                    Color(0xFFEAF3DE), Modifier.weight(1f))
-                StatCard("Late", stats.second.toString(),
-                    Color(0xFFFAEEDA), Modifier.weight(1f))
-                StatCard("Leave", stats.third.toString(),
-                    Color(0xFFE6F1FB), Modifier.weight(1f))
-            }
-        }
-
-        // ── Recent Records ──
-        item {
-            Text(
-                "Recent Records",
-                fontSize = 16.sp,
-                fontWeight = FontWeight.SemiBold,
-                modifier = Modifier.padding(
-                    start = 16.dp, top = 20.dp, bottom = 10.dp
+                NavigationBarItem(
+                    icon = {
+                        Icon(Icons.Default.DateRange, "History")
+                    },
+                    label = { Text("History") },
+                    selected = false,
+                    onClick = { onHistoryClick() }  // ← YAHI KAAM KAREGA
                 )
-            )
+                NavigationBarItem(
+                    icon = {
+                        Icon(Icons.Default.Description, "Leave")
+                    },
+                    label = { Text("Leave") },
+                    selected = false,
+                    onClick = { }  // Phase 2
+                )
+                NavigationBarItem(
+                    icon = {
+                        Icon(Icons.Default.Person, "Profile")
+                    },
+                    label = { Text("Profile") },
+                    selected = false,
+                    onClick = { }  // Phase 2
+                )
+            }
         }
+    ) { paddingValues ->
 
-        if (recentRecords.isEmpty()) {
+        LazyColumn(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(Color(0xFFF8F9FA))
+                .padding(paddingValues)
+        ) {
+            // ------Header------
             item {
                 Box(
                     modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(32.dp),
-                    contentAlignment = Alignment.Center
+                        .fillMaxSize()
+                        .background(PrimaryBlue)
+                        .padding(16.dp)
                 ) {
-                    Text(
-                        "No records found",
-                        color = Color(0xFF6B7280),
-                        fontSize = 14.sp
+                    Column {
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.SpaceBetween,
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            Column {
+                                val hour = Calendar.getInstance()
+                                    .get(Calendar.HOUR_OF_DAY)
+                                val greeting = when {
+                                    hour < 12 -> "Good morning"
+                                    hour < 17 -> "Good afternoon"
+                                    else -> "Good evening"
+                                }
+                                Text(
+                                    "$greeting, ",
+                                    color = Color.White.copy(alpha = 0.85f),
+                                    fontSize = 14.sp
+                                )
+                                Text(
+                                    userName,
+                                    color = Color.White,
+                                    fontSize = 24.sp,
+                                    fontWeight = FontWeight.Bold
+                                )
+                            }
+                            // Profile + Logout
+                            Row(
+                                verticalAlignment = Alignment.CenterVertically,
+                                horizontalArrangement = Arrangement.spacedBy(8.dp)
+                            ) {
+                                Box(
+                                    modifier = Modifier
+                                        .size(38.dp)
+                                        .background(
+                                            Color.White.copy(alpha = 0.2f),
+                                            CircleShape
+                                        ),
+                                    contentAlignment = Alignment.Center
+                                ) {
+                                    Text(
+                                        userName.firstOrNull()
+                                            ?.uppercaseChar()
+                                            ?.toString() ?: "J",
+                                        color = Color.White,
+                                        fontWeight = FontWeight.Bold
+                                    )
+                                }
+                                IconButton(onClick = onLogout) {
+                                    Icon(
+                                        Icons.Default.Logout,
+                                        contentDescription = "Logout",
+                                        tint = Color.White
+                                    )
+                                }
+                            }
+                        }
+                        Spacer(Modifier.height(4.dp))
+                        val dateStr = SimpleDateFormat(
+                            "EEE, dd MMM yyyy", Locale.getDefault()
+                        ).format(Date())
+                        Text(
+                            dateStr,
+                            color = Color.White.copy(alpha = 0.75f),
+                            fontSize = 12.sp
+                        )
+                    }
+                }
+            }
+
+            // ── Punch Card ──
+            item {
+                Card(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(16.dp),
+                    shape = RoundedCornerShape(16.dp),
+                    elevation = CardDefaults.cardElevation(2.dp),
+                    colors = CardDefaults.cardColors(
+                        containerColor = Color.White
+                    )
+                ) {
+                    Column(modifier = Modifier.padding(16.dp)) {
+                        when (val state = punchState) {
+                            is PunchState.Loading -> {
+                                Box(
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .height(80.dp),
+                                    contentAlignment = Alignment.Center
+                                ) {
+                                    CircularProgressIndicator(color = PrimaryBlue)
+                                }
+                            }
+
+                            is PunchState.NotPunchedIn -> {
+                                StatusBadge("Not Checked In", Color(0xFFEF4444))
+                                Spacer(Modifier.height(12.dp))
+                                PunchTimesRow("--:--", "--:--")
+                                Spacer(Modifier.height(16.dp))
+                                PunchButton(
+                                    text = "Punch In",
+                                    isPunchIn = true,
+                                    onClick = {
+                                        permissionLauncher.launch(
+                                            arrayOf(
+                                                Manifest.permission.ACCESS_FINE_LOCATION,
+                                                Manifest.permission.ACCESS_COARSE_LOCATION
+                                            )
+                                        )
+                                    }
+                                )
+                            }
+
+                            is PunchState.PunchedIn -> {
+                                StatusBadge("Working", Color(0xFF10B981))
+                                Spacer(Modifier.height(12.dp))
+                                PunchTimesRow(state.time, "--:--")
+                                Spacer(Modifier.height(16.dp))
+                                PunchButton(
+                                    text = "Punch Out",
+                                    isPunchIn = false,
+                                    onClick = {
+                                        permissionLauncher.launch(
+                                            arrayOf(
+                                                Manifest.permission.ACCESS_FINE_LOCATION,
+                                                Manifest.permission.ACCESS_COARSE_LOCATION
+                                            )
+                                        )
+                                    }
+                                )
+                            }
+
+                            is PunchState.PunchedOut -> {
+                                StatusBadge("Day Complete ✓", Color(0xFF2563EB))
+                                Spacer(Modifier.height(12.dp))
+                                PunchTimesRow(state.inTime, state.outTime)
+                                Spacer(Modifier.height(16.dp))
+                                Button(
+                                    onClick = {},
+                                    enabled = false,
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .height(50.dp),
+                                    colors = ButtonDefaults.buttonColors(
+                                        disabledContainerColor = Color(0xFFE5E7EB)
+                                    ),
+                                    shape = RoundedCornerShape(10.dp)
+                                ) {
+                                    Text(
+                                        "Work Day Complete",
+                                        color = Color(0xFF6B7280)
+                                    )
+                                }
+                            }
+
+                            is PunchState.Error -> {
+                                Text(
+                                    state.msg,
+                                    color = Color(0xFFEF4444),
+                                    fontSize = 13.sp
+                                )
+                                Spacer(Modifier.height(8.dp))
+                                TextButton(
+                                    onClick = { viewModel.loadData() }
+                                ) {
+                                    Text("Retry", color = PrimaryBlue)
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+            // ── Stats Row ──
+            item {
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 16.dp),
+                    horizontalArrangement = Arrangement.spacedBy(10.dp)
+                ) {
+                    StatCard(
+                        "Present", stats.first.toString(),
+                        Color(0xFFEAF3DE), Modifier.weight(1f)
+                    )
+                    StatCard(
+                        "Late", stats.second.toString(),
+                        Color(0xFFFAEEDA), Modifier.weight(1f)
+                    )
+                    StatCard(
+                        "Leave", stats.third.toString(),
+                        Color(0xFFE6F1FB), Modifier.weight(1f)
                     )
                 }
             }
-        } else {
-            items(recentRecords) { record ->
-                AttendanceItem(record)
+
+            // ── Recent Records ──
+            item {
+                Text(
+                    "Recent Records",
+                    fontSize = 16.sp,
+                    fontWeight = FontWeight.SemiBold,
+                    modifier = Modifier.padding(
+                        start = 16.dp, top = 20.dp, bottom = 10.dp
+                    )
+                )
             }
+
+            if (recentRecords.isEmpty()) {
+                item {
+                    Box(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(32.dp),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Text(
+                            "No records found",
+                            color = Color(0xFF6B7280),
+                            fontSize = 14.sp
+                        )
+                    }
+                }
+            } else {
+                items(recentRecords) { record ->
+                    AttendanceItem(record)
+                }
+            }
+
+            item { Spacer(Modifier.height(80.dp)) }
+
         }
-
-        item {Spacer(Modifier.height(80.dp)) }
-
     }
 }
 

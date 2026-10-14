@@ -7,6 +7,7 @@ import androidx.navigation.compose.rememberNavController
 import com.google.firebase.Firebase
 import com.google.firebase.auth.auth
 import com.jaysingh.checkin360.ui.auth.LoginScreen
+import com.jaysingh.checkin360.ui.history.AttendanceHistoryScreen
 import com.jaysingh.checkin360.ui.home.HomeScreen
 
 
@@ -14,6 +15,9 @@ import com.jaysingh.checkin360.ui.home.HomeScreen
 object Routes{
     const val LOGIN = "login"
     const val HOME = "home"
+    const val HISTORY = "history"
+    const val LEAVE = "leave"
+    const val PROFILE = "profile"
 }
 
 @Composable
@@ -40,7 +44,15 @@ fun AppNavigation() {
                     navController.navigate(Routes.LOGIN) {
                         popUpTo(Routes.HOME) { inclusive = true }
                     }
+                },
+                onHistoryClick = {
+                    navController.navigate(Routes.HISTORY)
                 }
+            )
+        }
+        composable(Routes.HISTORY) {
+            AttendanceHistoryScreen(
+                onBack = { navController.popBackStack() }
             )
         }
     }
