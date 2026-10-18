@@ -30,7 +30,8 @@ import java.util.*
 fun HomeScreen (
     onLogout: () -> Unit,
     onHistoryClick: () -> Unit,
-    viewModel: HomeViewModel = viewModel()
+    viewModel: HomeViewModel = viewModel(),
+    onLeaveClick: () -> Unit
 ) {
     val context = LocalContext.current
     val punchState by viewModel.punchState.collectAsState()
@@ -67,7 +68,7 @@ fun HomeScreen (
                     },
                     label = { Text("History") },
                     selected = false,
-                    onClick = { onHistoryClick() }  // ← YAHI KAAM KAREGA
+                    onClick = { onHistoryClick() }
                 )
                 NavigationBarItem(
                     icon = {
@@ -75,7 +76,7 @@ fun HomeScreen (
                     },
                     label = { Text("Leave") },
                     selected = false,
-                    onClick = { }  // Phase 2
+                    onClick = { onLeaveClick()}
                 )
                 NavigationBarItem(
                     icon = {

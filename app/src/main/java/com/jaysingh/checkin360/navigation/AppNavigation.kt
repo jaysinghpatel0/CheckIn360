@@ -9,6 +9,7 @@ import com.google.firebase.auth.auth
 import com.jaysingh.checkin360.ui.auth.LoginScreen
 import com.jaysingh.checkin360.ui.history.AttendanceHistoryScreen
 import com.jaysingh.checkin360.ui.home.HomeScreen
+import com.jaysingh.checkin360.ui.leave.LeaveScreen
 
 
 // Routes
@@ -47,11 +48,20 @@ fun AppNavigation() {
                 },
                 onHistoryClick = {
                     navController.navigate(Routes.HISTORY)
+                },
+                onLeaveClick = {
+                    navController.navigate(Routes.LEAVE)
                 }
             )
         }
         composable(Routes.HISTORY) {
             AttendanceHistoryScreen(
+                onBack = { navController.popBackStack() }
+            )
+        }
+
+        composable(Routes.LEAVE) {
+            LeaveScreen(
                 onBack = { navController.popBackStack() }
             )
         }
