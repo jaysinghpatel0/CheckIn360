@@ -10,6 +10,7 @@ import com.jaysingh.checkin360.ui.auth.LoginScreen
 import com.jaysingh.checkin360.ui.history.AttendanceHistoryScreen
 import com.jaysingh.checkin360.ui.home.HomeScreen
 import com.jaysingh.checkin360.ui.leave.LeaveScreen
+import com.jaysingh.checkin360.ui.profile.ProfileScreen
 
 
 // Routes
@@ -51,6 +52,9 @@ fun AppNavigation() {
                 },
                 onLeaveClick = {
                     navController.navigate(Routes.LEAVE)
+                },
+                onProfileClick = {
+                    navController.navigate(Routes.PROFILE)
                 }
             )
         }
@@ -63,6 +67,18 @@ fun AppNavigation() {
         composable(Routes.LEAVE) {
             LeaveScreen(
                 onBack = { navController.popBackStack() }
+            )
+        }
+
+        composable(Routes.PROFILE) {
+            ProfileScreen(
+                onBack = { navController.popBackStack() },
+                onLogOut = {
+                    Firebase.auth.signOut()
+                    navController.navigate(Routes.LOGIN) {
+                        popUpTo(0) { inclusive = true }
+                    }
+                }
             )
         }
     }
