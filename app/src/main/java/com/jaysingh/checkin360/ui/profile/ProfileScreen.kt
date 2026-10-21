@@ -52,162 +52,163 @@ fun ProfileScreen(
         )
     }
 
-    LazyColumn(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(Color(0xFFF8F9FA))
-    ) {
+    Column {
         // ── Blue Header with Avatar ──
-        item {
-            Box(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .background(PrimaryBlue)
-                    .padding(bottom = 16.dp, top = 30.dp)
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .background(PrimaryBlue)
+                .padding(bottom = 16.dp, top = 30.dp)
+        ) {
+            Column(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                Column(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalAlignment = Alignment.CenterHorizontally
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(start = 4.dp, bottom = 4.dp),
+                    verticalAlignment = Alignment.CenterVertically
                 ) {
-                    Row(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(start = 4.dp, bottom = 16.dp),
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        IconButton(onClick = onBack) {
-                            Icon(
-                                imageVector = Icons.Default.ArrowBack,
-                                contentDescription = "Back",
-                                tint = Color.White
-                            )
-                        }
-                        Spacer(Modifier.width(8.dp))
-                        Text(
-                            "Profile",
-                            color = Color.White,
-                            fontSize = 18.sp,
-                            fontWeight = FontWeight.Bold
+                    IconButton(onClick = onBack) {
+                        Icon(
+                            imageVector = Icons.Default.ArrowBack,
+                            contentDescription = "Back",
+                            tint = Color.White
                         )
                     }
-
-                    // Avatar circle
-                    Box(
-                        modifier = Modifier
-                            .size(80.dp)
-                            .background(Color.White, CircleShape),
-                        contentAlignment = Alignment.Center
-                    ) {
-                        Text(
-                            profile.initials,
-                            fontSize = 32.sp,
-                            fontWeight = FontWeight.Bold,
-                            color = PrimaryBlue
-                        )
-                    }
-                    Spacer(Modifier.height(12.dp))
+                    Spacer(Modifier.width(8.dp))
                     Text(
-                        profile.name,
+                        "Profile",
                         color = Color.White,
-                        fontSize = 20.sp,
+                        fontSize = 18.sp,
                         fontWeight = FontWeight.Bold
                     )
+                }
+
+                // Avatar circle
+                Box(
+                    modifier = Modifier
+                        .size(80.dp)
+                        .background(Color.White, CircleShape),
+                    contentAlignment = Alignment.Center
+                ) {
                     Text(
-                        profile.role,
-                        color = Color.White.copy(alpha = 0.8f),
-                        fontSize = 13.sp
+                        profile.initials,
+                        fontSize = 32.sp,
+                        fontWeight = FontWeight.Bold,
+                        color = PrimaryBlue
                     )
                 }
+                Spacer(Modifier.height(12.dp))
+                Text(
+                    profile.name,
+                    color = Color.White,
+                    fontSize = 20.sp,
+                    fontWeight = FontWeight.Bold
+                )
+                Text(
+                    profile.role,
+                    color = Color.White.copy(alpha = 0.8f),
+                    fontSize = 13.sp
+                )
             }
         }
 
-        // ── Info Card ──
-        item {
-            Card(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(16.dp),
-                shape = RoundedCornerShape(16.dp),
-                colors = CardDefaults.cardColors(
-                    containerColor = Color.White
-                ),
-                elevation = CardDefaults.cardElevation(2.dp)
-            ) {
-                Column(modifier = Modifier.padding(4.dp)) {
-                    ProfileInfoRow(
-                        icon = Icons.Default.Badge,
-                        label = "Employee ID",
-                        value = profile.employeeId
-                    )
-                    HorizontalDivider(color = Color(0xFFF3F4F6))
-                    ProfileInfoRow(
-                        icon = Icons.Default.Business,
-                        label = "Department",
-                        value = profile.department
-                    )
-                    HorizontalDivider(color = Color(0xFFF3F4F6))
-                    ProfileInfoRow(
-                        icon = Icons.Default.Email,
-                        label = "Email Address",
-                        value = profile.email
-                    )
-                    HorizontalDivider(color = Color(0xFFF3F4F6))
-                    ProfileInfoRow(
-                        icon = Icons.Default.Phone,
-                        label = "Phone Number",
-                        value = profile.phone
-                    )
-                    HorizontalDivider(color = Color(0xFFF3F4F6))
-                    ProfileInfoRow(
-                        icon = Icons.Default.CalendarMonth,
-                        label = "Date of Joining",
-                        value = profile.joiningDate
-                    )
+
+        LazyColumn(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(Color(0xFFF8F9FA))
+        ) {
+            // ── Info Card ──
+            item {
+                Card(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(16.dp),
+                    shape = RoundedCornerShape(16.dp),
+                    colors = CardDefaults.cardColors(
+                        containerColor = Color.White
+                    ),
+                    elevation = CardDefaults.cardElevation(2.dp)
+                ) {
+                    Column(modifier = Modifier.padding(4.dp)) {
+                        ProfileInfoRow(
+                            icon = Icons.Default.Badge,
+                            label = "Employee ID",
+                            value = profile.employeeId
+                        )
+                        HorizontalDivider(color = Color(0xFFF3F4F6))
+                        ProfileInfoRow(
+                            icon = Icons.Default.Business,
+                            label = "Department",
+                            value = profile.department
+                        )
+                        HorizontalDivider(color = Color(0xFFF3F4F6))
+                        ProfileInfoRow(
+                            icon = Icons.Default.Email,
+                            label = "Email Address",
+                            value = profile.email
+                        )
+                        HorizontalDivider(color = Color(0xFFF3F4F6))
+                        ProfileInfoRow(
+                            icon = Icons.Default.Phone,
+                            label = "Phone Number",
+                            value = profile.phone
+                        )
+                        HorizontalDivider(color = Color(0xFFF3F4F6))
+                        ProfileInfoRow(
+                            icon = Icons.Default.CalendarMonth,
+                            label = "Date of Joining",
+                            value = profile.joiningDate
+                        )
+                    }
                 }
             }
-        }
 
-        // ── Settings Card ──
-        item {
-            Card(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 16.dp),
-                shape = RoundedCornerShape(16.dp),
-                colors = CardDefaults.cardColors(
-                    containerColor = Color.White
-                ),
-                elevation = CardDefaults.cardElevation(2.dp)
-            ) {
-                Column(modifier = Modifier.padding(4.dp)) {
-                    ProfileActionRow(
-                        icon = Icons.Default.Notifications,
-                        label = "Notification Settings",
-                        iconTint = PrimaryBlue,
-                        onClick = { }
-                    )
-                    HorizontalDivider(color = Color(0xFFF3F4F6))
-                    ProfileActionRow(
-                        icon = Icons.Default.Lock,
-                        label = "Change Password",
-                        iconTint = PrimaryBlue,
-                        onClick = { }
-                    )
-                    HorizontalDivider(color = Color(0xFFF3F4F6))
-                    ProfileActionRow(
-                        icon = Icons.Default.Logout,
-                        label = "Log out",
-                        labelColor = Color(0xFFEF4444),
-                        iconTint = Color(0xFFEF4444),
-                        onClick = { showLogoutDialog = true }
-                    )
+            // ── Settings Card ──
+            item {
+                Card(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 16.dp),
+                    shape = RoundedCornerShape(16.dp),
+                    colors = CardDefaults.cardColors(
+                        containerColor = Color.White
+                    ),
+                    elevation = CardDefaults.cardElevation(2.dp)
+                ) {
+                    Column(modifier = Modifier.padding(4.dp)) {
+                        ProfileActionRow(
+                            icon = Icons.Default.Notifications,
+                            label = "Notification Settings",
+                            iconTint = PrimaryBlue,
+                            onClick = { }
+                        )
+                        HorizontalDivider(color = Color(0xFFF3F4F6))
+                        ProfileActionRow(
+                            icon = Icons.Default.Lock,
+                            label = "Change Password",
+                            iconTint = PrimaryBlue,
+                            onClick = { }
+                        )
+                        HorizontalDivider(color = Color(0xFFF3F4F6))
+                        ProfileActionRow(
+                            icon = Icons.Default.Logout,
+                            label = "Log out",
+                            labelColor = Color(0xFFEF4444),
+                            iconTint = Color(0xFFEF4444),
+                            onClick = { showLogoutDialog = true }
+                        )
+                    }
                 }
             }
+
+            item { Spacer(Modifier.height(80.dp)) }
         }
 
-        item { Spacer(Modifier.height(80.dp)) }
     }
-
 
 }
 

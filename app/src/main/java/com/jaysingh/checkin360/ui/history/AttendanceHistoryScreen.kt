@@ -40,7 +40,7 @@ fun AttendanceHistoryScreen(
             modifier = Modifier
                 .fillMaxWidth()
                 .background(PrimaryBlue)
-                .padding(16.dp)
+                .padding(bottom = 16.dp, top = 48.dp)
         ) {
             Row(
                 verticalAlignment = Alignment.CenterVertically
