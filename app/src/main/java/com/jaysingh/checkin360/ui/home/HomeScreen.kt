@@ -31,7 +31,8 @@ fun HomeScreen (
     onLogout: () -> Unit,
     onHistoryClick: () -> Unit,
     viewModel: HomeViewModel = viewModel(),
-    onLeaveClick: () -> Unit
+    onLeaveClick: () -> Unit,
+    onProfileClick: () -> Unit
 ) {
     val context = LocalContext.current
     val punchState by viewModel.punchState.collectAsState()
@@ -84,7 +85,7 @@ fun HomeScreen (
                     },
                     label = { Text("Profile") },
                     selected = false,
-                    onClick = { }  // Phase 2
+                    onClick = { onProfileClick() }
                 )
             }
         }
