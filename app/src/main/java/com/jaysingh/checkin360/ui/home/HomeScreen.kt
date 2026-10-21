@@ -10,6 +10,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.Logout
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -39,6 +40,29 @@ fun HomeScreen (
     val recentRecords by viewModel.recentRecords.collectAsState()
     val stats by viewModel.stats.collectAsState()
     val userName by viewModel.userName.collectAsState()
+    var showLogoutDialog by remember { mutableStateOf(false) }
+
+    // Logout confirmation dialog
+    if (showLogoutDialog) {
+        AlertDialog(
+            onDismissRequest = { showLogoutDialog = false },
+            title = { Text("Confirm Logout") },
+            text = { Text("Are you sure you want to logout?") },
+            confirmButton = {
+                TextButton(onClick = {
+                    showLogoutDialog = false
+                    onLogout()
+                }) {
+                    Text("Confirm Logout", color = Color(0xFFEF4444))
+                }
+            },
+            dismissButton = {
+                TextButton(onClick = { showLogoutDialog = false }) {
+                    Text("Cancel")
+                }
+            }
+        )
+    }
 
     // Permission Launcher
     val permissionLauncher = rememberLauncherForActivityResult(
@@ -153,9 +177,9 @@ fun HomeScreen (
                                         fontWeight = FontWeight.Bold
                                     )
                                 }
-                                IconButton(onClick = onLogout) {
+                                IconButton(onClick = { showLogoutDialog = true }) {
                                     Icon(
-                                        Icons.Default.Logout,
+                                        imageVector = Icons.AutoMirrored.Filled.Logout,
                                         contentDescription = "Logout",
                                         tint = Color.White
                                     )
@@ -330,7 +354,7 @@ fun HomeScreen (
                     }
                 }
             } else {
-                items(recentRecords) { record ->
+                items(recentRecords.take(4)) { record ->
                     AttendanceItem(record)
                 }
             }
