@@ -6,6 +6,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.google.firebase.Firebase
 import com.google.firebase.auth.auth
+import com.jaysingh.checkin360.ui.SplashScreen
 import com.jaysingh.checkin360.ui.auth.LoginScreen
 import com.jaysingh.checkin360.ui.history.AttendanceHistoryScreen
 import com.jaysingh.checkin360.ui.home.HomeScreen
@@ -15,6 +16,7 @@ import com.jaysingh.checkin360.ui.profile.ProfileScreen
 
 // Routes
 object Routes{
+    const val SPLASH = "splash"
     const val LOGIN = "login"
     const val HOME = "home"
     const val HISTORY = "history"
@@ -28,8 +30,19 @@ fun AppNavigation() {
 
     NavHost(
         navController = navController,
-        startDestination = Routes.LOGIN
+        startDestination = Routes.SPLASH
     ){
+        // Splash
+        composable(Routes.SPLASH) {
+            SplashScreen (
+                onSplashComplete = {
+                    navController.navigate(Routes.LOGIN) {
+                        popUpTo(Routes.SPLASH) { inclusive = true }
+                    }
+                }
+            )
+        }
+
         composable(Routes.LOGIN){
             LoginScreen(
                 onLoginSuccess = {
